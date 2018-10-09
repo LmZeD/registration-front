@@ -1,0 +1,48 @@
+$headerHeight: 60px;
+.header-holder {
+    height: $headerHeight;
+    background: $secondary;
+}
+
+.header-wrapper {
+    display: flex;
+    justify-content: flex-start;
+    flex-direction: row;
+    align-items: center;
+    height: $headerHeight;
+}
+
+.header-wrapper__row {
+    display: flex;
+    flex-direction: row;
+    align-items: first baseline;
+}
+
+.header-link {
+    font-size: 18px;
+    color: $primary;
+    &:hover {
+        color: darken($primary, 15%);
+        text-decoration: none;
+        cursor: pointer;
+    }
+}
+
+.header-link-home {
+    color: $white;
+    font-size: 24px;
+    margin-right: 50px;
+    &:hover {
+        color: darken($white, 15%);
+        text-decoration: none;
+    }
+}
+
+.header-wrapper-row__links {
+    display: flex;
+    flex-direction: row;
+}
+
+.header-link {
+    margin: 0 10px;
+}

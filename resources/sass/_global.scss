@@ -1,0 +1,53 @@
+.button {
+    border-radius: 5px;
+    padding: 10px 60px 10px 60px;
+    border-style: none;
+    margin: 5px 0;
+    &:hover {
+        text-decoration: none;
+        cursor: pointer;
+    }
+}
+
+.submit-button {
+    background: $green;
+    color: $white;
+    &:hover {
+        color: $white;
+        background: darken($green, 10%);
+    }
+}
+
+.form-left {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+}
+
+.input-error-message {
+    font-size: 18px;
+    color: $red;
+    text-align: center;
+    border: 1px solid $red;
+    background: lighten($red, 45%);
+    border-radius: 5px;
+}
+
+.danger-button {
+    background: $red;
+    color: $white;
+    &:hover {
+        color: $white;
+        background: darken($red, 10%);
+    }
+}
+
+.black-button {
+    background: lighten($black, 30%);
+    color: $white;
+    &:hover {
+        color: $white;
+        background: lighten($black, 40%);
+    }
+}
