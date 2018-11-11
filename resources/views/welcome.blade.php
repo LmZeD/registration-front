@@ -10,6 +10,9 @@
         <header-block></header-block>
         <router-view></router-view>
     </div>
+    <footer>
+        &copy; Made by Linas Maziukas
+    </footer>
 @endsection
 
 @section('scripts')

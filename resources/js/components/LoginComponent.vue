@@ -2,14 +2,14 @@
     <div class="login-wrapper">
         <div class="container">
             <div class="login-holder">
-                <div v-if="showError" class="input-error-message">
-                    Oops, something went wrong. Please check your login credentials
+                <div v-if="showMessages" class="update-appointment-holder__error-message">
+                    <p v-for="message in errorMessages" class="input-error-message">{{message}}</p>
                 </div>
                 <div class="form-left">
                     <label for="email">Email</label>
-                    <input type="text" id="email" v-model="user.email">
+                    <input type="text" id="email" v-model="user.email" placeholder="john@doe.com" required>
                     <label for="email">Password</label>
-                    <input type="password" id="password" v-model="user.password">
+                    <input type="password" id="password" v-model="user.password" placeholder="password" required>
                     <button @click="login()" class="button submit-button">Log in</button>
                 </div>
             </div>
@@ -22,10 +22,11 @@
         data() {
             return {
                 user: {
-                    email: 'linas@maziukas.com',
-                    password: 'test123'
+                    email: '',
+                    password: ''
                 },
-                showError: false
+                showMessages: false,
+                errorMessages: []
             }
         },
 
@@ -44,13 +45,27 @@
                 })
                     .then(response => response.json())
                     .then(response => {
-                        if (response['error'] === undefined) {
+                        if (response['error'] === undefined && response['errors'] === undefined) {
                             localStorage.setItem('token', response['token']);
                             localStorage.setItem('email', this.user.email);
                             this.user.password = '';
                             this.$router.push('/');
                         } else {
-                            this.showError = true;
+                            this.showMessages = true;
+                            let messages = [];
+                            if (response['error']) {
+                                messages.push(response['error']);
+                            } else {
+                                for (let key in response['errors']) {
+                                    if (!response['errors'].hasOwnProperty(key)) continue;
+                                    let obj = response['errors'][key];
+                                    for (let prop in obj) {
+                                        if(!obj.hasOwnProperty(prop)) continue;
+                                        messages.push(obj[prop])
+                                    }
+                                }
+                            }
+                            this.errorMessages = messages;
                         }
                     })
                     .catch(err => console.log('Callback error:' + err));

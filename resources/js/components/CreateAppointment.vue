@@ -9,25 +9,24 @@
                     <p v-for="message in errorMessages" class="input-error-message">{{message}}</p>
                 </div>
                 <div class="create-appointment-holder__form">
-                    <label for="appointment_title">Appointment title</label>
-                    <input v-model="appointment.appointment_title" type="text" id="appointment_title">
-                    <label for="appointment_description">Appointment description</label>
-                    <input v-model="appointment.appointment_description" type="text" id="appointment_description">
-                    <label for="requested_appointment_to">Appointment to</label>
-                    <select v-model="appointment.requested_appointment_to" name="requested_appointment_to" id="requested_appointment_to">
+                    <label for="appointment_title">Appointment title*</label>
+                    <input v-model="appointment.appointment_title" type="text" id="appointment_title" required>
+                    <label for="appointment_description">Appointment description*</label>
+                    <input v-model="appointment.appointment_description" type="text" id="appointment_description" required>
+                    <label for="requested_appointment_to">Appointment to*</label>
+                    <select v-model="appointment.requested_appointment_to" name="requested_appointment_to" id="requested_appointment_to" required>
                         <option v-for="item in users" :value="item.email">{{item.email}} ({{item.name}})</option>
                     </select>
-                    <label for="location">Location</label>
-                    <input v-model="appointment.related_github_issue" type="text" id="related_github_issue">
-                    <label for="location">Location</label>
+                    <label for="related_github_issue">Related github issue*</label>
+                    <input v-model="appointment.related_github_issue" type="text" id="related_github_issue" required>
+                    <label for="location">Location*</label>
                     <input v-model="appointment.location" placeholder="Masazine" type="text" id="location">
-                    <label for="starts_at">Starts at</label>
+                    <label for="starts_at">Starts at*</label>
                     <input v-model="appointment.starts_at" placeholder="2018-10-10 10:00" type="datetime-local"
-                           id="starts_at">
-                    <label for="ends_at">Ends at</label>
+                           id="starts_at" required>
+                    <label for="ends_at">Ends at*</label>
                     <input v-model="appointment.ends_at" placeholder="2018-10-10 11:00" type="datetime-local"
-                           id="ends_at">
-
+                           id="ends_at" required>
                     <button @click="storeAppointment" class="button submit-button">Create</button>
                 </div>
             </div>
@@ -100,7 +99,8 @@
                         ends_at: this.appointment.ends_at,
                         related_github_issue: this.appointment.related_github_issue,
                         location: this.appointment.location,
-                        appointment_to_user: this.appointment.requested_appointment_to
+                        appointment_to_user: this.appointment.requested_appointment_to,
+                        canceled: 0
                     }),
                     headers: {
                         'content-type': 'application/json',

@@ -2,6 +2,9 @@
     <div class="home-wrapper">
         <div class="container">
             <div class="homer-holder">
+                <div class="home-holder__image">
+                    <img :src="'/svg/Logo.svg'" alt="Logo">
+                </div>
                 <div class="home-holder__legend">
                     <div class="appointments-holder-section__card--upcoming">
                         Upcoming

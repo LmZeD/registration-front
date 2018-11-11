@@ -37,40 +37,36 @@
     p {
         all: unset;
     }
-}
-
-.appointments-holder-section__card--ended {
-    border: 1px dashed darken($green, 10%);
-    background: lighten($green, 20%);
-    &:hover {
-        background: $green;
+    &--ended{
+        border: 1px dashed darken($green, 10%);
+        background: lighten($green, 20%);
+        &:hover {
+            background: $green;
+        }
     }
-}
-
-.appointments-holder-section__card--upcoming {
-    border: 1px dashed darken($yellow, 10%);
-    background: lighten($yellow, 20%);
-    &:hover {
-        background: $yellow;
+    &--upcoming {
+        border: 1px dashed darken($yellow, 10%);
+        background: lighten($yellow, 20%);
+        &:hover {
+            background: $yellow;
+        }
     }
-}
-
-.appointments-holder-section__card--ongoing {
-    border: 1px dashed darken($blue, 10%);
-    background: lighten($blue, 20%);
-    -webkit-animation: fadeinout 4s linear forwards;
-    animation: fadeinout 4s linear forwards;
-    -webkit-animation-iteration-count: infinite;
-    &:hover {
-        background: $blue;
+    &--ongoing {
+        border: 1px dashed darken($blue, 10%);
+        background: lighten($blue, 20%);
+        -webkit-animation: fadeinout 4s linear forwards;
+        animation: fadeinout 4s linear forwards;
+        -webkit-animation-iteration-count: infinite;
+        &:hover {
+            background: $blue;
+        }
     }
-}
-
-.appointments-holder-section__card--to-me {
-    border: 3px solid $red;
-    background: lighten($red, 30%);
-    &:hover {
-        background: lighten($red, 10%);
+    &--to-me {
+        border: 3px solid $red;
+        background: lighten($red, 30%);
+        &:hover {
+            background: lighten($red, 10%);
+        }
     }
 }
 
@@ -140,8 +136,18 @@
 .home-holder__legend * {
     padding: 5px;
     border-radius: 5px;
+    margin-bottom: 5px;
 }
 
+.home-holder__image {
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    img {
+        max-width: 50%;
+        max-height: 300px;
+    }
+}
 
 @-webkit-keyframes fadeinout {
     0%,100% { opacity: 0.2; }
@@ -151,4 +157,30 @@
 @keyframes fadeinout {
     0%,100% { opacity: 0.2; }
     50% { opacity: 1; }
+}
+
+@media (max-width: 768px) {
+    .appointments-holder {
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+    .appointments-holder__section {
+        width: 50%;
+    }
+    .home-holder__image {
+        img {
+            max-width: 100%;
+        }
+    }
+}
+
+@media (max-width: 460px) {
+    .appointments-holder__section {
+        width: 90%;
+    }
+    .home-holder__legend {
+        justify-content: space-around;
+        align-items: center;
+    }
 }

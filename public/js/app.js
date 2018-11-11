@@ -50100,10 +50100,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     data: function data() {
         return {
             user: {
-                email: 'linas@maziukas.com',
-                password: 'test123'
+                email: '',
+                password: ''
             },
-            showError: false
+            showMessages: false,
+            errorMessages: []
         };
     },
 
@@ -50125,13 +50126,27 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             }).then(function (response) {
                 return response.json();
             }).then(function (response) {
-                if (response['error'] === undefined) {
+                if (response['error'] === undefined && response['errors'] === undefined) {
                     localStorage.setItem('token', response['token']);
                     localStorage.setItem('email', _this.user.email);
                     _this.user.password = '';
                     _this.$router.push('/');
                 } else {
-                    _this.showError = true;
+                    _this.showMessages = true;
+                    var messages = [];
+                    if (response['error']) {
+                        messages.push(response['error']);
+                    } else {
+                        for (var key in response['errors']) {
+                            if (!response['errors'].hasOwnProperty(key)) continue;
+                            var obj = response['errors'][key];
+                            for (var prop in obj) {
+                                if (!obj.hasOwnProperty(prop)) continue;
+                                messages.push(obj[prop]);
+                            }
+                        }
+                    }
+                    _this.errorMessages = messages;
                 }
             }).catch(function (err) {
                 return console.log('Callback error:' + err);
@@ -50151,12 +50166,16 @@ var render = function() {
   return _c("div", { staticClass: "login-wrapper" }, [
     _c("div", { staticClass: "container" }, [
       _c("div", { staticClass: "login-holder" }, [
-        _vm.showError
-          ? _c("div", { staticClass: "input-error-message" }, [
-              _vm._v(
-                "\n                Oops, something went wrong. Please check your login credentials\n            "
-              )
-            ])
+        _vm.showMessages
+          ? _c(
+              "div",
+              { staticClass: "update-appointment-holder__error-message" },
+              _vm._l(_vm.errorMessages, function(message) {
+                return _c("p", { staticClass: "input-error-message" }, [
+                  _vm._v(_vm._s(message))
+                ])
+              })
+            )
           : _vm._e(),
         _vm._v(" "),
         _c("div", { staticClass: "form-left" }, [
@@ -50171,7 +50190,12 @@ var render = function() {
                 expression: "user.email"
               }
             ],
-            attrs: { type: "text", id: "email" },
+            attrs: {
+              type: "text",
+              id: "email",
+              placeholder: "john@doe.com",
+              required: ""
+            },
             domProps: { value: _vm.user.email },
             on: {
               input: function($event) {
@@ -50194,7 +50218,12 @@ var render = function() {
                 expression: "user.password"
               }
             ],
-            attrs: { type: "password", id: "password" },
+            attrs: {
+              type: "password",
+              id: "password",
+              placeholder: "password",
+              required: ""
+            },
             domProps: { value: _vm.user.password },
             on: {
               input: function($event) {
@@ -50832,7 +50861,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         fetchAppointments: function fetchAppointments() {
             var _this = this;
 
-            fetch(this.$apiUrl + 'appointment/index', {
+            fetch(this.$apiUrl + 'appointment/', {
                 headers: {
                     'Accept': 'application/json',
                     'Authorization': 'Bearer ' + localStorage.getItem('token')
@@ -50876,7 +50905,7 @@ var render = function() {
                 this.localStorage.getItem("email")
                   ? "appointments-holder-section__card--to-me"
                   : "",
-                item.canceled
+                item.canceled == true
                   ? "appointments-holder-section__card--canceled"
                   : ""
               ]
@@ -50958,28 +50987,32 @@ var render = function() {
                 ]
               ),
               _vm._v(" "),
-              _c(
-                "div",
-                {
-                  staticClass: "appointments-holder-section-card__edit-button"
-                },
-                [
-                  _c(
-                    "router-link",
+              item.requested_appointment_to.email !==
+              this.localStorage.getItem("email")
+                ? _c(
+                    "div",
                     {
-                      staticClass: "button submit-button",
-                      attrs: {
-                        to: {
-                          name: "update-appointment",
-                          params: { id: item.id }
-                        }
-                      }
+                      staticClass:
+                        "appointments-holder-section-card__edit-button"
                     },
-                    [_vm._v("Edit")]
+                    [
+                      _c(
+                        "router-link",
+                        {
+                          staticClass: "button submit-button",
+                          attrs: {
+                            to: {
+                              name: "update-appointment",
+                              params: { id: item.id }
+                            }
+                          }
+                        },
+                        [_vm._v("Edit")]
+                      )
+                    ],
+                    1
                   )
-                ],
-                1
-              )
+                : _vm._e()
             ]
           )
         }),
@@ -51010,7 +51043,7 @@ var render = function() {
                 this.localStorage.getItem("email")
                   ? "appointments-holder-section__card--to-me"
                   : "",
-                item.canceled
+                item.canceled == true
                   ? "appointments-holder-section__card--canceled"
                   : ""
               ]
@@ -51092,28 +51125,32 @@ var render = function() {
                 ]
               ),
               _vm._v(" "),
-              _c(
-                "div",
-                {
-                  staticClass: "appointments-holder-section-card__edit-button"
-                },
-                [
-                  _c(
-                    "router-link",
+              item.requested_appointment_to.email !==
+              this.localStorage.getItem("email")
+                ? _c(
+                    "div",
                     {
-                      staticClass: "button submit-button",
-                      attrs: {
-                        to: {
-                          name: "update-appointment",
-                          params: { id: item.id }
-                        }
-                      }
+                      staticClass:
+                        "appointments-holder-section-card__edit-button"
                     },
-                    [_vm._v("Edit")]
+                    [
+                      _c(
+                        "router-link",
+                        {
+                          staticClass: "button submit-button",
+                          attrs: {
+                            to: {
+                              name: "update-appointment",
+                              params: { id: item.id }
+                            }
+                          }
+                        },
+                        [_vm._v("Edit")]
+                      )
+                    ],
+                    1
                   )
-                ],
-                1
-              )
+                : _vm._e()
             ]
           )
         }),
@@ -51144,7 +51181,7 @@ var render = function() {
                 this.localStorage.getItem("email")
                   ? "appointments-holder-section__card--to-me"
                   : "",
-                item.canceled
+                item.canceled == true
                   ? "appointments-holder-section__card--canceled"
                   : ""
               ]
@@ -51307,6 +51344,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     data: function data() {
@@ -51336,7 +51376,15 @@ var render = function() {
       _c(
         "div",
         { staticClass: "homer-holder" },
-        [_vm._m(0), _vm._v(" "), _c("appointments")],
+        [
+          _c("div", { staticClass: "home-holder__image" }, [
+            _c("img", { attrs: { src: "/svg/Logo.svg", alt: "Logo" } })
+          ]),
+          _vm._v(" "),
+          _vm._m(0),
+          _vm._v(" "),
+          _c("appointments")
+        ],
         1
       )
     ])
@@ -51474,7 +51522,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
 
 
 
@@ -51542,7 +51589,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                     ends_at: this.appointment.ends_at,
                     related_github_issue: this.appointment.related_github_issue,
                     location: this.appointment.location,
-                    appointment_to_user: this.appointment.requested_appointment_to
+                    appointment_to_user: this.appointment.requested_appointment_to,
+                    canceled: 0
                 }),
                 headers: {
                     'content-type': 'application/json',
@@ -51605,7 +51653,7 @@ var render = function() {
         _vm._v(" "),
         _c("div", { staticClass: "create-appointment-holder__form" }, [
           _c("label", { attrs: { for: "appointment_title" } }, [
-            _vm._v("Appointment title")
+            _vm._v("Appointment title*")
           ]),
           _vm._v(" "),
           _c("input", {
@@ -51617,7 +51665,7 @@ var render = function() {
                 expression: "appointment.appointment_title"
               }
             ],
-            attrs: { type: "text", id: "appointment_title" },
+            attrs: { type: "text", id: "appointment_title", required: "" },
             domProps: { value: _vm.appointment.appointment_title },
             on: {
               input: function($event) {
@@ -51634,7 +51682,7 @@ var render = function() {
           }),
           _vm._v(" "),
           _c("label", { attrs: { for: "appointment_description" } }, [
-            _vm._v("Appointment description")
+            _vm._v("Appointment description*")
           ]),
           _vm._v(" "),
           _c("input", {
@@ -51646,7 +51694,11 @@ var render = function() {
                 expression: "appointment.appointment_description"
               }
             ],
-            attrs: { type: "text", id: "appointment_description" },
+            attrs: {
+              type: "text",
+              id: "appointment_description",
+              required: ""
+            },
             domProps: { value: _vm.appointment.appointment_description },
             on: {
               input: function($event) {
@@ -51663,7 +51715,7 @@ var render = function() {
           }),
           _vm._v(" "),
           _c("label", { attrs: { for: "requested_appointment_to" } }, [
-            _vm._v("Appointment to")
+            _vm._v("Appointment to*")
           ]),
           _vm._v(" "),
           _c(
@@ -51679,7 +51731,8 @@ var render = function() {
               ],
               attrs: {
                 name: "requested_appointment_to",
-                id: "requested_appointment_to"
+                id: "requested_appointment_to",
+                required: ""
               },
               on: {
                 change: function($event) {
@@ -51706,7 +51759,9 @@ var render = function() {
             })
           ),
           _vm._v(" "),
-          _c("label", { attrs: { for: "location" } }, [_vm._v("Location")]),
+          _c("label", { attrs: { for: "related_github_issue" } }, [
+            _vm._v("Related github issue*")
+          ]),
           _vm._v(" "),
           _c("input", {
             directives: [
@@ -51717,7 +51772,7 @@ var render = function() {
                 expression: "appointment.related_github_issue"
               }
             ],
-            attrs: { type: "text", id: "related_github_issue" },
+            attrs: { type: "text", id: "related_github_issue", required: "" },
             domProps: { value: _vm.appointment.related_github_issue },
             on: {
               input: function($event) {
@@ -51733,7 +51788,7 @@ var render = function() {
             }
           }),
           _vm._v(" "),
-          _c("label", { attrs: { for: "location" } }, [_vm._v("Location")]),
+          _c("label", { attrs: { for: "location" } }, [_vm._v("Location*")]),
           _vm._v(" "),
           _c("input", {
             directives: [
@@ -51756,7 +51811,7 @@ var render = function() {
             }
           }),
           _vm._v(" "),
-          _c("label", { attrs: { for: "starts_at" } }, [_vm._v("Starts at")]),
+          _c("label", { attrs: { for: "starts_at" } }, [_vm._v("Starts at*")]),
           _vm._v(" "),
           _c("input", {
             directives: [
@@ -51770,7 +51825,8 @@ var render = function() {
             attrs: {
               placeholder: "2018-10-10 10:00",
               type: "datetime-local",
-              id: "starts_at"
+              id: "starts_at",
+              required: ""
             },
             domProps: { value: _vm.appointment.starts_at },
             on: {
@@ -51783,7 +51839,7 @@ var render = function() {
             }
           }),
           _vm._v(" "),
-          _c("label", { attrs: { for: "ends_at" } }, [_vm._v("Ends at")]),
+          _c("label", { attrs: { for: "ends_at" } }, [_vm._v("Ends at*")]),
           _vm._v(" "),
           _c("input", {
             directives: [
@@ -51797,7 +51853,8 @@ var render = function() {
             attrs: {
               placeholder: "2018-10-10 11:00",
               type: "datetime-local",
-              id: "ends_at"
+              id: "ends_at",
+              required: ""
             },
             domProps: { value: _vm.appointment.ends_at },
             on: {
@@ -51977,7 +52034,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         setData: function setData() {
             var _this = this;
 
-            fetch(this.$apiUrl + 'appointment/show/' + this.$route.params.id, {
+            fetch(this.$apiUrl + 'appointment/' + this.$route.params.id, {
                 headers: {
                     'accept': 'application/json',
                     'Authorization': 'Bearer ' + localStorage.getItem('token')
@@ -51985,6 +52042,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             }).then(function (response) {
                 return response.json();
             }).then(function (response) {
+                if (response['message'] == 'Not found') {
+                    _this.$router.push('/');
+                }
                 _this.appointment.requested_appointment_to = response.appointment.requested_appointment_to.email;
                 _this.appointment = response.appointment;
                 _this.isToCurrentUser = response.appointment.requested_appointment_to.email == localStorage.getItem('email');
@@ -51995,7 +52055,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         deleteAppointment: function deleteAppointment() {
             var _this2 = this;
 
-            fetch(this.$apiUrl + 'appointment/destroy', {
+            fetch(this.$apiUrl + 'appointment', {
                 method: 'delete',
                 headers: {
                     'accept': 'application/json',
@@ -52050,8 +52110,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         updateAppointment: function updateAppointment(isCanceled) {
             var _this4 = this;
 
-            fetch(this.$apiUrl + 'appointment/update', {
-                method: 'post',
+            fetch(this.$apiUrl + 'appointment/', {
+                method: 'put',
                 body: JSON.stringify({
                     id: this.$route.params.id,
                     appointment_title: this.appointment.appointment_title,
@@ -52121,7 +52181,7 @@ var render = function() {
             )
           : _vm._e(),
         _vm._v(" "),
-        !_vm.isToCurrentUser
+        !_vm.isToCurrentUser && _vm.appointment.canceled == 0
           ? _c("div", { staticClass: "update-appointment-holder__form" }, [
               _c("label", { attrs: { for: "appointment_title" } }, [
                 _vm._v("Appointment title")
@@ -52220,10 +52280,16 @@ var render = function() {
                     }
                   }
                 },
-                _vm._l(_vm.users, function(item) {
-                  return _c("option", { domProps: { value: item.email } }, [
-                    _vm._v(_vm._s(item.email) + " (" + _vm._s(item.name) + ")")
-                  ])
+                _vm._l(_vm.users, function(item, index) {
+                  return _c(
+                    "option",
+                    { domProps: { value: item.email, selected: index === 0 } },
+                    [
+                      _vm._v(
+                        _vm._s(item.email) + " (" + _vm._s(item.name) + ")"
+                      )
+                    ]
+                  )
                 })
               ),
               _vm._v(" "),
@@ -52356,24 +52422,22 @@ var render = function() {
                       )
                     : _vm._e(),
                   _vm._v(" "),
-                  _c(
-                    "button",
-                    {
-                      staticClass: "button black-button",
-                      on: {
-                        click: function($event) {
-                          _vm.updateAppointment(true)
-                        }
-                      }
-                    },
-                    [_vm._v("Cancel appointment")]
-                  )
+                  !_vm.isToCurrentUser
+                    ? _c(
+                        "button",
+                        {
+                          staticClass: "button danger-button",
+                          on: { click: _vm.deleteAppointment }
+                        },
+                        [_vm._v("Delete appointment")]
+                      )
+                    : _vm._e()
                 ]
               )
             ])
           : _vm._e(),
         _vm._v(" "),
-        _vm.isToCurrentUser
+        _vm.appointment.canceled == 0
           ? _c(
               "button",
               {
@@ -52386,16 +52450,18 @@ var render = function() {
               },
               [_vm._v("Cancel appointment")]
             )
-          : _vm._e(),
-        _vm._v(" "),
-        _c(
-          "button",
-          {
-            staticClass: "button danger-button",
-            on: { click: _vm.deleteAppointment }
-          },
-          [_vm._v("Delete appointment")]
-        )
+          : _c(
+              "button",
+              {
+                staticClass: "button black-button",
+                on: {
+                  click: function($event) {
+                    _vm.updateAppointment(false)
+                  }
+                }
+              },
+              [_vm._v("Un-Cancel appointment")]
+            )
       ])
     ])
   ])

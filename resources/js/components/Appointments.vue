@@ -4,7 +4,7 @@
             <div class="appointments-holder-section__title">
                 <h2>Upcoming</h2>
             </div>
-            <div :class="[item.requested_appointment_to.email === this.localStorage.getItem('email') ? 'appointments-holder-section__card--to-me' : '', item.canceled ? 'appointments-holder-section__card--canceled' : '' ]" v-for="item in upcoming" class="appointments-holder-section__card appointments-holder-section__card--upcoming">
+            <div :class="[item.requested_appointment_to.email === this.localStorage.getItem('email') ? 'appointments-holder-section__card--to-me' : '', item.canceled == true ? 'appointments-holder-section__card--canceled' : '' ]" v-for="item in upcoming" class="appointments-holder-section__card appointments-holder-section__card--upcoming">
                 <div class="appointments-holder-section-card__title">
                     <h2>{{item.appointment_title}}</h2>
                 </div>
@@ -24,7 +24,7 @@
                 <div class="appointments-holder-section-card__ends-at">
                     <p>Ends: <b>{{item.ends_at}}</b></p>
                 </div>
-                <div class="appointments-holder-section-card__edit-button">
+                <div v-if="item.requested_appointment_to.email !== this.localStorage.getItem('email')" class="appointments-holder-section-card__edit-button">
                     <router-link :to="{ name: 'update-appointment' , params: { id: item.id}}" class="button submit-button">Edit</router-link>
                 </div>
             </div>
@@ -37,7 +37,7 @@
             <div class="appointments-holder-section__title">
                 <h2>Ongoing</h2>
             </div>
-            <div :class="[item.requested_appointment_to.email === this.localStorage.getItem('email') ? 'appointments-holder-section__card--to-me' : '', item.canceled ? 'appointments-holder-section__card--canceled' : '' ]" v-for="item in ongoing" class="appointments-holder-section__card appointments-holder-section__card--ongoing">
+            <div :class="[item.requested_appointment_to.email === this.localStorage.getItem('email') ? 'appointments-holder-section__card--to-me' : '', item.canceled == true ? 'appointments-holder-section__card--canceled' : '' ]" v-for="item in ongoing" class="appointments-holder-section__card appointments-holder-section__card--ongoing">
                 <div class="appointments-holder-section-card__title">
                     <h2>{{item.appointment_title}}</h2>
                 </div>
@@ -57,7 +57,7 @@
                 <div class="appointments-holder-section-card__ends-at">
                     <p>Ends: <b>{{item.ends_at}}</b></p>
                 </div>
-                <div class="appointments-holder-section-card__edit-button">
+                <div v-if="item.requested_appointment_to.email !== this.localStorage.getItem('email')" class="appointments-holder-section-card__edit-button">
                     <router-link :to="{ name: 'update-appointment' , params: { id: item.id}}" class="button submit-button">Edit</router-link>
                 </div>
             </div>
@@ -70,7 +70,7 @@
             <div class="appointments-holder-section__title">
                 <h2>Finished</h2>
             </div>
-            <div :class="[item.requested_appointment_to.email === this.localStorage.getItem('email') ? 'appointments-holder-section__card--to-me' : '', item.canceled ? 'appointments-holder-section__card--canceled' : '' ]" v-for="item in ended" class="appointments-holder-section__card appointments-holder-section__card--ended">
+            <div :class="[item.requested_appointment_to.email === this.localStorage.getItem('email') ? 'appointments-holder-section__card--to-me' : '', item.canceled == true ? 'appointments-holder-section__card--canceled' : '' ]" v-for="item in ended" class="appointments-holder-section__card appointments-holder-section__card--ended">
                 <div class="appointments-holder-section-card__title">
                     <h2>{{item.appointment_title}}</h2>
                 </div>
@@ -134,7 +134,7 @@
 
         methods: {
             fetchAppointments() {
-                fetch(this.$apiUrl + 'appointment/index', {
+                fetch(this.$apiUrl + 'appointment/', {
                     headers: {
                         'Accept': 'application/json',
                         'Authorization' : 'Bearer ' + localStorage.getItem('token')

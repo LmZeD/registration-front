@@ -10568,9 +10568,9 @@ a.text-dark:focus {
   -webkit-box-direction: normal;
       -ms-flex-direction: row;
           flex-direction: row;
-  -webkit-box-align: first baseline;
-      -ms-flex-align: first baseline;
-          align-items: first baseline;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
 }
 
 .header-link {
@@ -10803,6 +10803,22 @@ a.text-dark:focus {
 .home-holder__legend * {
   padding: 5px;
   border-radius: 5px;
+  margin-bottom: 5px;
+}
+
+.home-holder__image {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  text-align: center;
+}
+
+.home-holder__image img {
+  max-width: 50%;
+  max-height: 300px;
 }
 
 @-webkit-keyframes fadeinout {
@@ -10822,6 +10838,43 @@ a.text-dark:focus {
 
   50% {
     opacity: 1;
+  }
+}
+
+@media (max-width: 768px) {
+  .appointments-holder {
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+            flex-direction: column;
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
+    -webkit-box-pack: center;
+        -ms-flex-pack: center;
+            justify-content: center;
+  }
+
+  .appointments-holder__section {
+    width: 50%;
+  }
+
+  .home-holder__image img {
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 460px) {
+  .appointments-holder__section {
+    width: 90%;
+  }
+
+  .home-holder__legend {
+    -ms-flex-pack: distribute;
+        justify-content: space-around;
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
   }
 }
 

@@ -8,14 +8,14 @@
                 <div v-if="showMessages" class="update-appointment-holder__error-message">
                     <p v-for="message in errorMessages" class="input-error-message">{{message}}</p>
                 </div>
-                <div v-if="!isToCurrentUser" class="update-appointment-holder__form">
+                <div v-if="!isToCurrentUser && appointment.canceled == 0" class="update-appointment-holder__form">
                     <label for="appointment_title">Appointment title</label>
                     <input v-model="appointment.appointment_title" type="text" id="appointment_title">
                     <label for="appointment_description">Appointment description</label>
                     <input v-model="appointment.appointment_description" type="text" id="appointment_description">
                     <label for="requested_appointment_to">Appointment to</label>
                     <select v-model="appointment.requested_appointment_to" name="requested_appointment_to" id="requested_appointment_to">
-                        <option v-for="item in users" :value="item.email">{{item.email}} ({{item.name}})</option>
+                        <option v-for="(item, index) in users" :value="item.email" :selected="index === 0">{{item.email}} ({{item.name}})</option>
                     </select>
                     <label for="location">Location</label>
                     <input v-model="appointment.related_github_issue" type="text" id="related_github_issue">
@@ -29,11 +29,11 @@
                            id="ends_at">
                     <div class="update-appointment-holder-form__buttons">
                         <button v-if="!isToCurrentUser" @click="updateAppointment(false)" class="button submit-button">Update</button>
-                        <button @click="updateAppointment(true)" class="button black-button">Cancel appointment</button>
+                        <button v-if="!isToCurrentUser" @click="deleteAppointment" class="button danger-button">Delete appointment</button>
                     </div>
                 </div>
-                <button v-if="isToCurrentUser" @click="updateAppointment(true)" class="button black-button">Cancel appointment</button>
-                <button @click="deleteAppointment" class="button danger-button">Delete appointment</button>
+                <button v-if="appointment.canceled == 0" @click="updateAppointment(true)" class="button black-button">Cancel appointment</button>
+                <button v-else @click="updateAppointment(false)" class="button black-button">Un-Cancel appointment</button>
             </div>
         </div>
     </div>
@@ -76,7 +76,7 @@
 
         methods: {
             setData() {
-                fetch(this.$apiUrl + 'appointment/show/' + this.$route.params.id, {
+                fetch(this.$apiUrl + 'appointment/' + this.$route.params.id, {
                     headers: {
                         'accept': 'application/json',
                         'Authorization': 'Bearer ' + localStorage.getItem('token'),
@@ -84,6 +84,9 @@
                 })
                     .then(response => response.json())
                     .then(response => {
+                        if (response['message'] == 'Not found') {
+                            this.$router.push('/');
+                        }
                         this.appointment.requested_appointment_to = response.appointment.requested_appointment_to.email;
                         this.appointment = response.appointment;
                         this.isToCurrentUser = (response.appointment.requested_appointment_to.email == localStorage.getItem('email'));
@@ -92,7 +95,7 @@
             },
 
             deleteAppointment() {
-                fetch(this.$apiUrl + 'appointment/destroy', {
+                fetch(this.$apiUrl + 'appointment', {
                     method: 'delete',
                     headers: {
                         'accept': 'application/json',
@@ -144,8 +147,8 @@
             },
 
             updateAppointment(isCanceled) {
-                fetch(this.$apiUrl + 'appointment/update', {
-                    method: 'post',
+                fetch(this.$apiUrl + 'appointment/', {
+                    method: 'put',
                     body: JSON.stringify({
                         id: this.$route.params.id,
                         appointment_title: this.appointment.appointment_title,
